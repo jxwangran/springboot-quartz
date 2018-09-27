@@ -10,7 +10,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.yijiupi.himalaya.service.OrderService;
 
 /**    
 * @Title: HelloJob.java  
@@ -23,16 +26,15 @@ import org.springframework.stereotype.Component;
 @Component
 @DisallowConcurrentExecution //比如此任务需耗时7秒，却配置5秒执行一次，注解后将会7秒才运行一次,任务上家注解
 public class HelloJob implements BaseJob {
-
+	
+	@Autowired
+	private OrderService orderService;
+	
 	Logger logger = LoggerFactory.getLogger(HelloJob.class);
 	
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.error("HelloJob 开始执行");
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		orderService.sort();
 		logger.error("HelloJob : " + new Date() + " result : " + context.getResult()+ "  mapValue : " + context.getJobDetail().getJobDataMap().getString("name"));
 		logger.error("HelloJob 执行结束");
 	}

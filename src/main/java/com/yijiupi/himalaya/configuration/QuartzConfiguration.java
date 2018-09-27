@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+import com.yijiupi.himalaya.utils.MyJobFactory;
+
 /**    
 * @Title: QuartzConfiguration.java  
 * @Package com.yijiupi.himalaya  
@@ -32,12 +34,15 @@ public class QuartzConfiguration {
 	@Autowired
 	@Qualifier(value = "primaryDataSource")
 	private DataSource primaryDataSource;
+	@Autowired
+	private MyJobFactory myJobFactory;
 	
 	@Bean(name="SchedulerFactory")
 	public SchedulerFactoryBean initSchedulerFactoryBean() throws IOException {
 		SchedulerFactoryBean factoryBean = new SchedulerFactoryBean();
 		factoryBean.setQuartzProperties(quartzProperties());
 		factoryBean.setDataSource(primaryDataSource);
+		factoryBean.setJobFactory(myJobFactory);
 		return factoryBean;
 	}
 	
